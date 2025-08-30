@@ -36,27 +36,17 @@ dependencies {
 ### 1. Initialize DataStore Module
 
 ```kotlin
-class MyApplication : Application() {
-    lateinit var dataStoreModule: DataStoreModule
-    
-    override fun onCreate() {
-        super.onCreate()
-        dataStoreModule = DataStoreModule(this)
-    }
-}
+
 ```
 
 ### 2. Access TidyStorage
 
 ```kotlin
 class MainActivity : AppCompatActivity() {
-    private lateinit var tidyStorage: TidyStorage
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        val app = application as MyApplication
-        tidyStorage = app.dataStoreModule.tidyStorage
+
     }
 }
 ```
@@ -90,8 +80,10 @@ lifecycleScope.launch {
 ### 5. Observe Data Changes
 
 ```kotlin
-class UserViewModel : ViewModel() {
-    private val tidyStorage = // ... get instance
+@HiltViewModel
+class StorageViewModel @Inject constructor(
+    private val tidyStorage: TidyStorage
+) : ViewModel() {
     
     val username: StateFlow<StorageResult<String>> = 
         tidyStorage.observeValue("username", "Guest")
@@ -123,6 +115,16 @@ lifecycleScope.launch {
         }
     }
 }
+// Or
+lifecycleScope.launch {
+    repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+        viewmodel.userName.collect { state ->
+            state.onSuccess { name ->
+                binding.textView.text = name
+            }
+        }
+    }
+}
 ```
 
 ## 🔧 Advanced Usage
@@ -133,28 +135,16 @@ lifecycleScope.launch {
 @Module
 @InstallIn(SingletonComponent::class)
 object StorageModule {
-    
-    @Provides
-    @Singleton
-    fun provideDataStoreModule(@ApplicationContext context: Context): DataStoreModule {
-        return DataStoreModule(context)
-    }
-    
-    @Provides
-    @Singleton
-    fun provideTidyStorage(dataStoreModule: DataStoreModule): TidyStorage {
-        return dataStoreModule.tidyStorage
-    }
-}
 
-// In your ViewModel
-@HiltViewModel
-class UserViewModel @Inject constructor(
-    private val tidyStorage: TidyStorage
-) : ViewModel() {
-    // Your implementation
+    @Provides
+    @Singleton
+    fun provideTidyStorage(
+        @ApplicationContext context: Context
+    ): TidyStorage {
+        return DataStoreModule(context).tidyStorage
+    }
+
 }
-```
 
 ### Data Management Operations
 
