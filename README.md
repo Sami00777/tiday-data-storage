@@ -115,7 +115,8 @@ lifecycleScope.launch {
         }
     }
 }
-// Or
+
+// Or get the value only on Success state
 lifecycleScope.launch {
     repeatOnLifecycle(state = Lifecycle.State.STARTED) {
         viewmodel.userName.collect { state ->
