@@ -1,3 +1,6 @@
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.sami00777/tidystorage.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.github.sami00777/tidystorage)
+
+
 # DataStore Flow
 
 A modern, type-safe Android library that provides a clean and intuitive API for persistent key-value storage using Android DataStore. Built with Kotlin Coroutines and Flow for reactive data handling.
