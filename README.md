@@ -33,10 +33,10 @@ dependencies {
 
 ## 📖 Quick Start
 
-### 1. Initialize DataStore Module
+### 1. Initialize DataStore Module Without DI
 
 ```kotlin
-
+connectivityMonitor = ConnectivityMonitor(this@MainActivity)
 ```
 
 ### 2. Access TidyStorage
@@ -46,6 +46,41 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            //Set value
+            tidyStorage.saveValue("key", "Hello from TidyStorage!")
+            
+            //Get value
+            tidyStorage.getValue("key", "Default Value")
+                .onSuccess { data ->
+                    txt1.text = data
+                }.onError { e ->
+                    e.printStackTrace()
+                }
+
+            // Observe value
+            tidyStorage.observeValue("key", "Default Value").collect { state ->
+                when(state) {
+                    StorageResult.Loading -> {
+                        txt1.text = "Loading..."
+                    }
+                    is StorageResult.Success -> {
+                        txt1.text = state.data
+                    }
+                    is StorageResult.Error -> {
+                        state.exception.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        // Clear value
+        button.setOnClickListener {
+            lifecycleScope.launch {
+                tidyStorage.removeValue("key")
+            }
+        }
 
     }
 }
@@ -200,27 +235,6 @@ The library follows clean architecture principles with clear separation of conce
                                                 │ Android DataStore│
                                                 │  (Preferences)  │
                                                 └─────────────────┘
-```
-
-## 🧪 Testing
-
-The library is designed with testability in mind. You can easily mock the `KeyValueStorage` interface for unit testing:
-
-```kotlin
-class MockKeyValueStorage : KeyValueStorage {
-    private val storage = mutableMapOf<String, Any?>()
-    
-    override suspend fun <T> getValue(key: String, defaultValue: T): T {
-        @Suppress("UNCHECKED_CAST")
-        return storage[key] as? T ?: defaultValue
-    }
-    
-    override suspend fun <T> setValue(key: String, value: T) {
-        storage[key] = value
-    }
-    
-    // Implement other methods...
-}
 ```
 
 ## 📋 API Reference
