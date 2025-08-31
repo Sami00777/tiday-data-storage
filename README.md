@@ -27,7 +27,7 @@ Add the dependency to your app's `build.gradle` file:
 
 ```gradle
 dependencies {
-    implementation 'io.github.sami00777:tiday-data-storage:1.0.0'
+    implementation 'io.github.sami00777:tiday-data-storage:1.0.1'
 }
 ```
 
