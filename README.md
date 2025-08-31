@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.sami00777/tidystorage.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.github.sami00777/tidystorage)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.sami00777/tidy-data-storage.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.github.sami00777/tidy-data-storage)
 
 
 # DataStore Flow
