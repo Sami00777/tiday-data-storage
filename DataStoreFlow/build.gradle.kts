@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -11,8 +13,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -29,8 +29,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
     }
 }
 
@@ -43,13 +45,14 @@ dependencies {
 mavenPublishing {
     coordinates(
         groupId = "io.github.sami00777",
-        artifactId = "datastoreflow",
-        version = "1.0.0"
+        artifactId = "tidy-data-storage",
+        version = "1.0.1"
     )
+
     pom {
-        name.set("DataStoreFlow")
-        description.set("A Kotlin library that simplifies DataStore operations using Kotlin Flow.")
-        url.set("https://github.com/Sami00777/android-datastore-flow")
+        name.set("Tidy Data Storage")
+        description.set("A simple and efficient key-value storage library for Android using DataStore.")
+        url.set("https://github.com/Sami00777/tiday-data-storage")
         inceptionYear.set("2025")
 
         licenses {
@@ -58,21 +61,26 @@ mavenPublishing {
                 url.set("https://opensource.org/license/mit/")
             }
         }
+
         developers {
             developer {
-                id.set("Sami00777")
+                id.set("sami00777")
                 name.set("Sam Shamshiri")
                 email.set("sam.sh00777@gmail.com")
             }
+        }
 
-            scm {
-                url.set("https://github.com/Sami00777/android-datastore-flow")
-                connection.set("scm:git:git://github.com/Sami00777/android-connectivity-monitoring.git")
-                developerConnection.set("scm:git:ssh://git@github.com/Sami00777/android-connectivity-monitoring.git")
-            }
+        scm {
+            url.set("https://github.com/Sami00777/tiday-data-storage")
+            connection.set("scm:git:git://github.com/Sami00777/tiday-data-storage.git")
+            developerConnection.set("scm:git:ssh://git@github.com/Sami00777/tiday-data-storage.git")
         }
     }
+
+    // Configure publishing to Maven Central
     publishToMavenCentral(automaticRelease = true)
+
+    // Enable signing for all publications
     signAllPublications()
 }
 
@@ -97,35 +105,3 @@ afterEvaluate {
         }
     }
 }
-
-// Configure signing properly
-//signing {
-//    val signingKey = System.getenv("SIGNING_KEY")
-//    val signingPassword = System.getenv("SIGNING_PASSWORD")
-//
-//    if (!signingKey.isNullOrBlank() && !signingPassword.isNullOrBlank()) {
-//        useInMemoryPgpKeys(signingKey, signingPassword)
-//    }
-//}
-
-// Debug task to check environment variables
-//tasks.register("checkEnvVars") {
-//    doLast {
-//        val signingKey = System.getenv("SIGNING_KEY")
-//        val signingPassword = System.getenv("SIGNING_PASSWORD")
-//
-//        println("SIGNING_KEY is ${if (signingKey.isNullOrBlank()) "NOT SET" else "SET (${signingKey.length} characters)"}")
-//        println("SIGNING_PASSWORD is ${if (signingPassword.isNullOrBlank()) "NOT SET" else "SET"}")
-//    }
-//}
-
-// Task to print actual environment variable values (for debugging purposes)
-//tasks.register("printEnvVars") {
-//    doLast {
-//        val signingKey = System.getenv("SIGNING_KEY")
-//        val signingPassword = System.getenv("SIGNING_PASSWORD")
-//
-//        println("SIGNING_KEY: $signingKey")
-//        println("SIGNING_PASSWORD: $signingPassword")
-//    }
-//}
